@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ចុះឈ្មោះធ្វើតេស្ត</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Khmer&family=Moul&display=swap');
+
+        :root {
+            --tg-theme-bg: #eff3f8;
+            --primary-color: #3498db;
+            --text-dark: #2c3e50;
+        }
+
+        body {
+            font-family: 'Khmer', sans-serif;
+            background-color: var(--tg-theme-bg);
+            margin: 0;
+            padding: 20px 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 90vh;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        .app-card {
+            background: #ffffff;
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(149, 157, 165, 0.1);
+            width: 100%;
+            max-width: 360px;
+            padding: 30px 22px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        .app-icon {
+            font-size: 45px;
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+
+        h1 {
+            font-family: 'Moul', serif;
+            color: var(--text-dark);
+            font-size: 16px;
+            margin: 0 0 8px 0;
+            line-height: 1.8;
+        }
+
+        .app-subtitle {
+            font-size: 12px;
+            color: #8e9bb0;
+            margin: 0 0 25px 0;
+        }
+
+        .input-wrapper {
+            margin-bottom: 16px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #e1e8f0;
+            border-radius: 14px;
+            font-family: 'Khmer', sans-serif;
+            font-size: 14px;
+            box-sizing: border-box;
+            background-color: #f7f9fc;
+            color: var(--text-dark);
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--primary-color);
+            background-color: #ffffff;
+            box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.1);
+        }
+
+        /* ស្ទីលជ្រើសរើសថ្នាក់ */
+        .track-selector {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .track-item {
+            flex: 1;
+            position: relative;
+            padding: 13px;
+            border: 1px solid #e1e8f0;
+            border-radius: 14px;
+            background: #f7f9fc;
+            font-size: 13px;
+            font-weight: bold;
+            color: #5d6d7e;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .track-item input {
+            position: absolute;
+            opacity: 0;
+        }
+
+        .track-item.selected {
+            border-color: var(--primary-color);
+            background-color: #eaf2f8;
+            color: #2980b9;
+        }
+
+        /* ស្ទីលប្រអប់ជ្រើសរើសខេត្តរចនាថ្មី (Custom Select Box) */
+        .custom-select-trigger {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #e1e8f0;
+            border-radius: 14px;
+            font-size: 14px;
+            background-color: #f7f9fc;
+            color: #a0aec0;
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-sizing: border-box;
+        }
+
+        .custom-select-trigger.has-value {
+            color: var(--text-dark);
+        }
+
+        /* ផ្ទាំង Popup ជ្រើសរើសខេត្ត និងផ្ទាំង Alert */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            display: flex;
+            justify-content: center;
+            align-items: flex-end; /* លោតឡើងពីខាងក្រោមស្អាត */
+            z-index: 999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            background: white;
+            width: 100%;
+            max-width: 400px;
+            border-radius: 24px 24px 0 0;
+            padding: 20px;
+            box-sizing: border-box;
+            max-height: 70vh;
+            display: flex;
+            flex-direction: column;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            font-family: 'Moul', serif;
+            font-size: 14px;
+            color: var(--text-dark);
+            text-align: center;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e1e8f0;
+        }
+
+        .province-list {
+            overflow-y: auto;
+            margin-top: 10px;
+            padding-bottom: 20px;
+        }
+
+        .province-item {
+            padding: 14px;
+            font-size: 15px;
+            color: var(--text-dark);
+            border-bottom: 1px solid #f7f9fc;
+            cursor: pointer;
+            text-align: left;
+        }
+
+        .province-item:active {
+            background-color: #f0f4f8;
+            color: var(--primary-color);
+        }
+
+        /* ស្ទីលប៊ូតុងសកម្មភាព */
+        .btn-action {
+            width: 100%;
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 14px;
+            font-family: 'Khmer', sans-serif;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 6px 16px rgba(52, 152, 219, 0.2);
+            margin-top: 10px;
+        }
+
+        .btn-action:active {
+            transform: scale(0.98);
+        }
+
+        /* ស្ទីល Custom Alert Box */
+        .alert-modal {
+            align-items: center; /* ឱ្យនៅចំកណ្តាលអេក្រង់ */
+        }
+
+        .alert-content {
+            background: white;
+            width: 85%;
+            max-width: 320px;
+            border-radius: 20px;
+            padding: 25px 20px;
+            text-align: center;
+            box-sizing: border-box;
+            transform: scale(0.8);
+            transition: transform 0.3s ease;
+        }
+
+        .alert-modal.active .alert-content {
+            transform: scale(1);
+        }
+
+        .alert-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        .alert-title {
+            font-family: 'Moul', serif;
+            font-size: 14px;
+            color: #e74c3c;
+            margin-bottom: 8px;
+        }
+
+        .alert-text {
+            font-size: 13px;
+            color: #7f8c8d;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .btn-alert-close {
+            background: #2c3e50;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 10px;
+            font-family: 'Khmer', sans-serif;
+            font-size: 13px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-card">
+    <span class="app-icon">🎓</span>
+    <h1>តេស្តប្រវត្តិវិទ្យា ថ្នាក់ទី១២</h1>
+    <p class="app-subtitle">សូមបំពេញព័ត៌មានដើម្បីចូលរួមប្រឡង</p>
+    
+    <form id="mainForm" onsubmit="return validateAndSubmit(event)">
+        <div class="input-wrapper">
+            <input type="text" id="fullName" placeholder="👤 គោត្តនាម - នាមសិស្ស" autocomplete="off">
+        </div>
+
+        <div class="track-selector">
+            <label class="track-item" id="itemSci">
+                <input type="radio" name="track" value="វិទ្យាសាស្ត្រ" onclick="updateTrack('Sci')"> 🔬 វិទ្យាសាស្ត្រ
+            </label>
+            <label class="track-item" id="itemSoc">
+                <input type="radio" name="track" value="វិទ្យាសាស្ត្រសង្គម" onclick="updateTrack('Soc')"> 📚 សង្គម
+            </label>
+        </div>
+        
+        <div class="input-wrapper">
+            <input type="text" id="school" placeholder="🏫 មកពីសាលារៀន / វិទ្យាល័យ" autocomplete="off">
+        </div>
+
+        <div class="input-wrapper">
+            <div class="custom-select-trigger" id="provinceTrigger" onclick="openProvinceModal()">
+                <span id="provinceText">📍 ជ្រើសរើសរាជធានី / ខេត្ត</span>
+                <span>▾</span>
+            </div>
+        </div>
+        
+        <button type="submit" class="btn-action" id="submitBtn">ចាប់ផ្តើមធ្វើតេស្ត 🚀</button>
+    </form>
+</div>
+
+<div class="modal-overlay" id="provinceModal" onclick="closeProvinceModal(event)">
+    <div class="modal-content">
+        <div class="modal-header">សូមជ្រើសរើសខេត្តរបស់អ្នក</div>
+        <div class="province-list" id="provinceList"></div>
+    </div>
+</div>
+
+<div class="modal-overlay alert-modal" id="alertModal">
+    <div class="alert-content">
+        <div class="alert-icon">⚠️</div>
+        <div class="alert-title" id="alertTitle">ខ្វះព័ត៌មាន</div>
+        <div class="alert-text" id="alertText">សូមបំពេញព័ត៌មានឱ្យបានគ្រប់គ្រង!</div>
+        <button class="btn-alert-close" onclick="closeAlert()">យល់ព្រម</button>
+    </div>
+</div>
+
+<script>
+    const BOT_TOKEN = '8690967267:AAHXIaOLWQZlXYfZNi6_jd80oYkcZN81oY8';
+    const CHAT_ID = '-1003919234156';
+    
+    let selectedProvince = "";
+    const provinces = ["ភ្នំពេញ", "កណ្តាល", "កំពង់ចាម", "កំពង់ធំ", "កំពង់ឆ្នាំង", "កំពង់ស្ពឺ", "តាកែវ", "កំពត", "ព្រះសីហនុ", "កែប", "កោះកុង", "បាត់ដំបង", "បន្ទាយមានជ័យ", "ប៉ៃលិន", "សៀមរាប", "ព្រះវិហារ", "ឧត្តរមានជ័យ", "ពោធិ៍សាត់", "ក្រចេះ", "ស្ទឹងត្រែង", "រតនគិរី", "មណ្ឌលគិរី", "ព្រៃវែង", "ស្វាយរៀង", "ត្បូងឃ្មុំ"];
+
+    // បង្កើតបញ្ជីខេត្តដាក់ក្នុង Popup
+    const listContainer = document.getElementById('provinceList');
+    provinces.forEach(p => {
+        const div = document.createElement('div');
+        div.className = 'province-item';
+        div.innerText = p;
+        div.onclick = () => selectProvince(p);
+        listContainer.appendChild(div);
+    });
+
+    function updateTrack(type) {
+        document.getElementById('itemSci').classList.remove('selected');
+        document.getElementById('itemSoc').classList.remove('selected');
+        document.getElementById('item' + type).classList.add('selected');
+    }
+
+    function openProvinceModal() {
+        document.getElementById('provinceModal').classList.add('active');
+    }
+
+    function closeProvinceModal(e) {
+        if(!e || e.target === document.getElementById('provinceModal')) {
+            document.getElementById('provinceModal').classList.remove('active');
+        }
+    }
+
+    function selectProvince(p) {
+        selectedProvince = p;
+        const trigger = document.getElementById('provinceTrigger');
+        document.getElementById('provinceText').innerText = "📍 " + p;
+        trigger.classList.add('has-value');
+        closeProvinceModal();
+    }
+
+    // មុខងារបង្ហាញផ្ទាំង Alert ស្អាតៗ
+    function showAlert(title, message) {
+        document.getElementById('alertTitle').innerText = title;
+        document.getElementById('alertText').innerText = message;
+        document.getElementById('alertModal').classList.add('active');
+    }
+
+    function closeAlert() {
+        document.getElementById('alertModal').classList.remove('active');
+    }
+
+    // ពិនិត្យលក្ខខណ្ឌពេលចុច Submit
+    function validateAndSubmit(e) {
+        e.preventDefault();
+        
+        const name = document.getElementById('fullName').value.trim();
+        const trackRadio = document.querySelector('input[name="track"]:checked');
+        const school = document.getElementById('school').value.trim();
+        const submitBtn = document.getElementById('submitBtn');
+
+        if (!name) {
+            showAlert("សូមបញ្ចូលឈ្មោះ", "សូមមេត្តាបំពេញឈ្មោះពិតរបស់អ្នក ដើម្បីងាយស្រួលផ្ញើលទ្ធផលពិន្ទុ។");
+            return false;
+        }
+        if (!trackRadio) {
+            showAlert("សូមជ្រើសរើសថ្នាក់", "សូមជ្រើសរើសផ្នែកចំណេះដឹងរបស់អ្នក (វិទ្យាសាស្ត្រ ឬ សង្គម)។");
+            return false;
+        }
+        if (!school) {
+            showAlert("សូមបញ្ចូលឈ្មោះសាលា", "សូមបំពេញឈ្មោះសាលារៀន ឬវិទ្យាល័យដែលអ្នកកំពុងសិក្សា។");
+            return false;
+        }
+        if (!selectedProvince) {
+            showAlert("សូមជ្រើសរើសខេត្ត", "សូមចុចជ្រើសរើសរាជធានី ឬខេត្តដែលអ្នករស់នៅ។");
+            return false;
+        }
+
+        // បើបំពេញគ្រប់ហើយ ផ្ញើទៅ Telegram
+        const track = trackRadio.value;
+        submitBtn.disabled = true;
+        submitBtn.innerText = "⌛ កំពុងភ្ជាប់ទៅប្រព័ន្ធ...";
+
+        const textMessage = `📥 *មានបេក្ខជនចុះឈ្មោះប្រឡង* 📥\n\n` +
+                            `👤 ឈ្មោះ៖ *${name}*\n` +
+                            `📚 ថ្នាក់៖ *${track}*\n` +
+                            `🏫 សាលា៖ *${school}*\n` +
+                            `📍 ខេត្ត៖ *${selectedProvince}*`;
+
+        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                chat_id: CHAT_ID,
+                text: textMessage,
+                parse_mode: 'Markdown'
+            })
+        })
+        .then(res => {
+            sessionStorage.setItem('studentName', name);
+            sessionStorage.setItem('studentTrack', track);
+            sessionStorage.setItem('studentSchool', school);
+            sessionStorage.setItem('studentProvince', selectedProvince);
+            
+            window.location.href = 'acc.html';
+        })
+        .catch(err => {
+            showAlert("ការតភ្ជាប់បរាជ័យ", "អ៊ីនធឺណិតមានបញ្ហា! សូមព្យាយាមម្តងទៀត។");
+            submitBtn.disabled = false;
+            submitBtn.innerText = "ចាប់ផ្តើមធ្វើតេស្ត 🚀";
+        });
+    }
+</script>
+
+</body>
+</html>
