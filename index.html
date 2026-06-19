@@ -2,448 +2,347 @@
 <html lang="km">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ចុះឈ្មោះធ្វើតេស្ត</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ចុះឈ្មោះប្រឡងប្រវត្តិវិទ្យា ទី១២</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Khmer&family=Moul&display=swap');
-
         :root {
-            --tg-theme-bg: #eff3f8;
-            --primary-color: #3498db;
-            --text-dark: #2c3e50;
+            --bg-color: #e3edf7;
+            --text-color: #31344b;
+            --main-accent: #3498db;
+            --shadow-raised: 6px 6px 12px #b8c7d9, -6px -6px 12px #ffffff;
+            --shadow-pressed: inset 4px 4px 8px #b8c7d9, inset -4px -4px 8px #ffffff;
         }
 
-        body {
-            font-family: 'Khmer', sans-serif;
-            background-color: var(--tg-theme-bg);
-            margin: 0;
-            padding: 20px 15px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 90vh;
-            -webkit-user-select: none;
-            user-select: none;
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Kantumruy Pro', sans-serif; }
+        
+        body { 
+            background-color: var(--bg-color); 
+            color: var(--text-color); 
+            min-height: 100vh; 
+            display: flex; 
+            flex-direction: column;
+            justify-content: center; 
+            align-items: center; 
+            padding: 20px;
+            position: relative;
         }
 
-        .app-card {
-            background: #ffffff;
-            border-radius: 24px;
-            box-shadow: 0 10px 30px rgba(149, 157, 165, 0.1);
+        .container {
+            max-width: 480px;
             width: 100%;
-            max-width: 360px;
-            padding: 30px 22px;
-            box-sizing: border-box;
+            padding: 35px 25px;
+            background: var(--bg-color);
+            border-radius: 30px;
+            box-shadow: var(--shadow-raised);
             text-align: center;
+            margin-bottom: 40px;
         }
 
-        .app-icon {
-            font-size: 45px;
-            margin-bottom: 10px;
-            display: inline-block;
+        .icon-box {
+            font-size: 55px;
+            color: #2c3e50;
+            margin-bottom: 15px;
         }
 
-        h1 {
-            font-family: 'Moul', serif;
-            color: var(--text-dark);
-            font-size: 16px;
-            margin: 0 0 8px 0;
-            line-height: 1.8;
+        h1 { font-size: 22px; margin-bottom: 8px; color: #2c3e50; }
+        p { font-size: 14px; opacity: 0.8; margin-bottom: 25px; }
+
+        /* Form Styling */
+        .form-group {
+            text-align: left;
+            margin-bottom: 18px;
         }
 
-        .app-subtitle {
-            font-size: 12px;
-            color: #8e9bb0;
-            margin: 0 0 25px 0;
-        }
-
-        .input-wrapper {
-            margin-bottom: 16px;
-        }
-
-        input[type="text"] {
-            width: 100%;
-            padding: 14px 16px;
-            border: 1px solid #e1e8f0;
-            border-radius: 14px;
-            font-family: 'Khmer', sans-serif;
+        label {
             font-size: 14px;
-            box-sizing: border-box;
-            background-color: #f7f9fc;
-            color: var(--text-dark);
+            font-weight: 600;
+            display: block;
+            margin-bottom: 8px;
+            padding-left: 5px;
+            color: #2c3e50;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 14px 18px;
+            border: none;
             outline: none;
-            transition: all 0.3s ease;
+            background: var(--bg-color);
+            box-shadow: var(--shadow-pressed);
+            border-radius: 15px;
+            font-size: 15px;
+            color: var(--text-color);
+            transition: 0.3s;
         }
 
-        input[type="text"]:focus {
-            border-color: var(--primary-color);
-            background-color: #ffffff;
-            box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.1);
-        }
-
-        /* ស្ទីលជ្រើសរើសថ្នាក់ */
-        .track-selector {
+        /* រចនាបថកន្លែងជ្រើសរើសថ្នាក់ (Radio Cards) */
+        .class-selector {
             display: flex;
-            gap: 12px;
-            margin-bottom: 16px;
+            gap: 15px;
+            margin-top: 5px;
         }
 
-        .track-item {
+        .class-option {
             flex: 1;
             position: relative;
-            padding: 13px;
-            border: 1px solid #e1e8f0;
-            border-radius: 14px;
-            background: #f7f9fc;
-            font-size: 13px;
-            font-weight: bold;
-            color: #5d6d7e;
-            cursor: pointer;
-            transition: all 0.25s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
         }
 
-        .track-item input {
+        .class-option input[type="radio"] {
             position: absolute;
             opacity: 0;
+            width: 0;
+            height: 0;
         }
 
-        .track-item.selected {
-            border-color: var(--primary-color);
-            background-color: #eaf2f8;
-            color: #2980b9;
-        }
-
-        /* ស្ទីលប្រអប់ជ្រើសរើសខេត្តរចនាថ្មី (Custom Select Box) */
-        .custom-select-trigger {
-            width: 100%;
-            padding: 14px 16px;
-            border: 1px solid #e1e8f0;
-            border-radius: 14px;
+        .class-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            padding: 15px;
+            background: var(--bg-color);
+            border-radius: 15px;
+            box-shadow: var(--shadow-raised);
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            font-weight: 600;
             font-size: 14px;
-            background-color: #f7f9fc;
-            color: #a0aec0;
-            text-align: left;
+        }
+
+        .class-card i {
+            font-size: 24px;
+            color: #7f8c8d;
+            transition: 0.3s;
+        }
+
+        /* នៅពេលដេលគេចុចរើស (Checked) */
+        .class-option input[type="radio"]:checked + .class-card {
+            box-shadow: var(--shadow-pressed);
+            color: var(--main-accent);
+            border-color: rgba(52, 152, 219, 0.3);
+        }
+
+        .class-option input[type="radio"]:checked + .class-card i {
+            color: var(--main-accent);
+            transform: scale(1.1);
+        }
+
+        /* ប៊ូតុងបញ្ជូនទិន្នន័យ */
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: var(--bg-color);
+            box-shadow: var(--shadow-raised);
+            border: none;
+            border-radius: 15px;
+            color: #2c3e50;
+            font-size: 16px;
+            font-weight: bold;
             cursor: pointer;
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
-            box-sizing: border-box;
+            gap: 10px;
+            transition: 0.2s;
+            margin-top: 25px;
         }
 
-        .custom-select-trigger.has-value {
-            color: var(--text-dark);
+        .submit-btn:active {
+            box-shadow: var(--shadow-pressed);
+            transform: scale(0.98);
         }
 
-        /* ផ្ទាំង Popup ជ្រើសរើសខេត្ត និងផ្ទាំង Alert */
+        /* រក្សាសិទ្ធិដោយ ខ្លឹមសារ */
+        footer {
+            position: absolute;
+            bottom: 15px;
+            font-size: 12px;
+            opacity: 0.7;
+        }
+
+        /* ផ្ទាំងលោតព្រមានបែបស្អាត (Custom Alert Modal) */
         .modal-overlay {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.4);
             display: flex;
             justify-content: center;
-            align-items: flex-end; /* លោតឡើងពីខាងក្រោមស្អាត */
-            z-index: 999;
+            align-items: center;
+            z-index: 9999;
             opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
+            visibility: hidden;
+            transition: 0.3s ease;
         }
 
         .modal-overlay.active {
             opacity: 1;
-            pointer-events: auto;
+            visibility: visible;
         }
 
-        .modal-content {
-            background: white;
-            width: 100%;
-            max-width: 400px;
-            border-radius: 24px 24px 0 0;
-            padding: 20px;
-            box-sizing: border-box;
-            max-height: 70vh;
-            display: flex;
-            flex-direction: column;
-            transform: translateY(100%);
-            transition: transform 0.3s ease;
-        }
-
-        .modal-overlay.active .modal-content {
-            transform: translateY(0);
-        }
-
-        .modal-header {
-            font-family: 'Moul', serif;
-            font-size: 14px;
-            color: var(--text-dark);
+        .modal-box {
+            background: var(--bg-color);
+            padding: 30px 20px;
+            border-radius: 25px;
+            max-width: 90%;
+            width: 360px;
             text-align: center;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #e1e8f0;
-        }
-
-        .province-list {
-            overflow-y: auto;
-            margin-top: 10px;
-            padding-bottom: 20px;
-        }
-
-        .province-item {
-            padding: 14px;
-            font-size: 15px;
-            color: var(--text-dark);
-            border-bottom: 1px solid #f7f9fc;
-            cursor: pointer;
-            text-align: left;
-        }
-
-        .province-item:active {
-            background-color: #f0f4f8;
-            color: var(--primary-color);
-        }
-
-        /* ស្ទីលប៊ូតុងសកម្មភាព */
-        .btn-action {
-            width: 100%;
-            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
-            color: white;
-            border: none;
-            padding: 15px;
-            border-radius: 14px;
-            font-family: 'Khmer', sans-serif;
-            font-size: 15px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 6px 16px rgba(52, 152, 219, 0.2);
-            margin-top: 10px;
-        }
-
-        .btn-action:active {
-            transform: scale(0.98);
-        }
-
-        /* ស្ទីល Custom Alert Box */
-        .alert-modal {
-            align-items: center; /* ឱ្យនៅចំកណ្តាលអេក្រង់ */
-        }
-
-        .alert-content {
-            background: white;
-            width: 85%;
-            max-width: 320px;
-            border-radius: 20px;
-            padding: 25px 20px;
-            text-align: center;
-            box-sizing: border-box;
+            box-shadow: var(--shadow-raised);
             transform: scale(0.8);
-            transition: transform 0.3s ease;
+            transition: 0.3s ease;
         }
 
-        .alert-modal.active .alert-content {
+        .modal-overlay.active .modal-box {
             transform: scale(1);
         }
 
-        .alert-icon {
-            font-size: 40px;
+        .modal-icon {
+            font-size: 45px;
+            color: #e74c3c;
+            margin-bottom: 15px;
+        }
+
+        .modal-box h3 {
+            font-size: 18px;
+            color: #2c3e50;
             margin-bottom: 10px;
         }
 
-        .alert-title {
-            font-family: 'Moul', serif;
+        .modal-box p {
             font-size: 14px;
-            color: #e74c3c;
-            margin-bottom: 8px;
-        }
-
-        .alert-text {
-            font-size: 13px;
             color: #7f8c8d;
             margin-bottom: 20px;
-            line-height: 1.6;
         }
 
-        .btn-alert-close {
-            background: #2c3e50;
-            color: white;
-            border: none;
+        .modal-close-btn {
             padding: 10px 25px;
-            border-radius: 10px;
-            font-family: 'Khmer', sans-serif;
-            font-size: 13px;
+            background: var(--bg-color);
+            box-shadow: var(--shadow-raised);
+            border: none;
+            border-radius: 12px;
+            color: #e74c3c;
+            font-weight: bold;
             cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .modal-close-btn:active {
+            box-shadow: var(--shadow-pressed);
         }
     </style>
 </head>
 <body>
 
-<div class="app-card">
-    <span class="app-icon">🎓</span>
-    <h1>តេស្តប្រវត្តិវិទ្យា ថ្នាក់ទី១២</h1>
-    <p class="app-subtitle">សូមបំពេញព័ត៌មានដើម្បីចូលរួមប្រឡង</p>
+<div class="container">
+    <div class="icon-box">
+        <i class="fas fa-graduation-cap"></i>
+    </div>
+    <h1>ប្រឡងតេស្តប្រវត្តិវិទ្យា ថ្នាក់ទី១២</h1>
+    <p>សូមបំពេញព័ត៌មានខាងក្រោមដើម្បីចូលរួមធ្វើតេស្ត</p>
     
-    <form id="mainForm" onsubmit="return validateAndSubmit(event)">
-        <div class="input-wrapper">
-            <input type="text" id="fullName" placeholder="👤 គោត្តនាម - នាមសិស្ស" autocomplete="off">
+    <form id="regForm" onsubmit="return validateForm(event)">
+        <div class="form-group">
+            <label><i class="fas fa-user"></i> ឈ្មោះសិស្ស</label>
+            <input type="text" id="username" class="input-field" placeholder="វាយបញ្ចូលឈ្មោះរបស់អ្នក...">
         </div>
 
-        <div class="track-selector">
-            <label class="track-item" id="itemSci">
-                <input type="radio" name="track" value="វិទ្យាសាស្ត្រ" onclick="updateTrack('Sci')"> 🔬 វិទ្យាសាស្ត្រ
-            </label>
-            <label class="track-item" id="itemSoc">
-                <input type="radio" name="track" value="វិទ្យាសាស្ត្រសង្គម" onclick="updateTrack('Soc')"> 📚 សង្គម
-            </label>
-        </div>
-        
-        <div class="input-wrapper">
-            <input type="text" id="school" placeholder="🏫 មកពីសាលារៀន / វិទ្យាល័យ" autocomplete="off">
+        <div class="form-group">
+            <label><i class="fas fa-school"></i> មកពីសាលារៀន/វិទ្យាល័យ</label>
+            <input type="text" id="school" class="input-field" placeholder="វាយបញ្ចូលឈ្មោះសាលារៀន...">
         </div>
 
-        <div class="input-wrapper">
-            <div class="custom-select-trigger" id="provinceTrigger" onclick="openProvinceModal()">
-                <span id="provinceText">📍 ជ្រើសរើសរាជធានី / ខេត្ត</span>
-                <span>▾</span>
+        <div class="form-group">
+            <label><i class="fas fa-map-marker-alt"></i> មកពីខេត្ត/ក្រុង</label>
+            <input type="text" id="province" class="input-field" placeholder="វាយបញ្ចូលឈ្មោះខេត្ត/ក្រុង...">
+        </div>
+
+        <div class="form-group">
+            <label><i class="fas fa-book"></i> ជ្រើសរើសផ្នែក/ថ្នាក់សិក្សា</label>
+            <div class="class-selector">
+                
+                <label class="class-option">
+                    <input type="radio" name="class_type" value="science" checked>
+                    <div class="class-card">
+                        <i class="fas fa-atom"></i>
+                        <span>វិទ្យាសាស្ត្រ</span>
+                    </div>
+                </label>
+
+                <label class="class-option">
+                    <input type="radio" name="class_type" value="social">
+                    <div class="class-card">
+                        <i class="fas fa-globe-asia"></i>
+                        <span>ថ្នាក់សង្គម</span>
+                    </div>
+                </label>
+
             </div>
         </div>
-        
-        <button type="submit" class="btn-action" id="submitBtn">ចាប់ផ្តើមធ្វើតេស្ត 🚀</button>
+
+        <button type="submit" class="submit-btn">
+            ចុះឈ្មោះចូលរួម <i class="fas fa-arrow-right"></i>
+        </button>
     </form>
 </div>
 
-<div class="modal-overlay" id="provinceModal" onclick="closeProvinceModal(event)">
-    <div class="modal-content">
-        <div class="modal-header">សូមជ្រើសរើសខេត្តរបស់អ្នក</div>
-        <div class="province-list" id="provinceList"></div>
+<div class="modal-overlay" id="alertModal">
+    <div class="modal-box">
+        <div class="modal-icon">
+            <i class="fas fa-exclamation-circle"></i>
+        </div>
+        <h3>សូមបំពេញព័ត៌មាន!</h3>
+        <p id="alertMessage">សូមបំពេញព័ត៌មានដែលខ្វះខាតឱ្យបានគ្រប់ជ្រុងជ្រោយ។</p>
+        <button class="modal-close-btn" onclick="closeModal()">យល់ព្រម</button>
     </div>
 </div>
 
-<div class="modal-overlay alert-modal" id="alertModal">
-    <div class="alert-content">
-        <div class="alert-icon">⚠️</div>
-        <div class="alert-title" id="alertTitle">ខ្វះព័ត៌មាន</div>
-        <div class="alert-text" id="alertText">សូមបំពេញព័ត៌មានឱ្យបានគ្រប់គ្រង!</div>
-        <button class="btn-alert-close" onclick="closeAlert()">យល់ព្រម</button>
-    </div>
-</div>
+<footer>
+    <p>រក្សាសិទ្ធិដោយ ខ្លឹមសារ</p>
+</footer>
 
 <script>
-    const BOT_TOKEN = '8690967267:AAHXIaOLWQZlXYfZNi6_jd80oYkcZN81oY8';
-    const CHAT_ID = '-1003919234156';
-    
-    let selectedProvince = "";
-    const provinces = ["ភ្នំពេញ", "កណ្តាល", "កំពង់ចាម", "កំពង់ធំ", "កំពង់ឆ្នាំង", "កំពង់ស្ពឺ", "តាកែវ", "កំពត", "ព្រះសីហនុ", "កែប", "កោះកុង", "បាត់ដំបង", "បន្ទាយមានជ័យ", "ប៉ៃលិន", "សៀមរាប", "ព្រះវិហារ", "ឧត្តរមានជ័យ", "ពោធិ៍សាត់", "ក្រចេះ", "ស្ទឹងត្រែង", "រតនគិរី", "មណ្ឌលគិរី", "ព្រៃវែង", "ស្វាយរៀង", "ត្បូងឃ្មុំ"];
+    function validateForm(event) {
+        // ទប់កុំឱ្យវាផ្លាស់ទីទៅទំព័រផ្សេងភ្លាមៗ
+        event.preventDefault(); 
 
-    // បង្កើតបញ្ជីខេត្តដាក់ក្នុង Popup
-    const listContainer = document.getElementById('provinceList');
-    provinces.forEach(p => {
-        const div = document.createElement('div');
-        div.className = 'province-item';
-        div.innerText = p;
-        div.onclick = () => selectProvince(p);
-        listContainer.appendChild(div);
-    });
-
-    function updateTrack(type) {
-        document.getElementById('itemSci').classList.remove('selected');
-        document.getElementById('itemSoc').classList.remove('selected');
-        document.getElementById('item' + type).classList.add('selected');
-    }
-
-    function openProvinceModal() {
-        document.getElementById('provinceModal').classList.add('active');
-    }
-
-    function closeProvinceModal(e) {
-        if(!e || e.target === document.getElementById('provinceModal')) {
-            document.getElementById('provinceModal').classList.remove('active');
-        }
-    }
-
-    function selectProvince(p) {
-        selectedProvince = p;
-        const trigger = document.getElementById('provinceTrigger');
-        document.getElementById('provinceText').innerText = "📍 " + p;
-        trigger.classList.add('has-value');
-        closeProvinceModal();
-    }
-
-    // មុខងារបង្ហាញផ្ទាំង Alert ស្អាតៗ
-    function showAlert(title, message) {
-        document.getElementById('alertTitle').innerText = title;
-        document.getElementById('alertText').innerText = message;
-        document.getElementById('alertModal').classList.add('active');
-    }
-
-    function closeAlert() {
-        document.getElementById('alertModal').classList.remove('active');
-    }
-
-    // ពិនិត្យលក្ខខណ្ឌពេលចុច Submit
-    function validateAndSubmit(e) {
-        e.preventDefault();
-        
-        const name = document.getElementById('fullName').value.trim();
-        const trackRadio = document.querySelector('input[name="track"]:checked');
+        const username = document.getElementById('username').value.trim();
         const school = document.getElementById('school').value.trim();
-        const submitBtn = document.getElementById('submitBtn');
+        const province = document.getElementById('province').value.trim();
+        
+        const modal = document.getElementById('alertModal');
+        const alertMessage = document.getElementById('alertMessage');
 
-        if (!name) {
-            showAlert("សូមបញ្ចូលឈ្មោះ", "សូមមេត្តាបំពេញឈ្មោះពិតរបស់អ្នក ដើម្បីងាយស្រួលផ្ញើលទ្ធផលពិន្ទុ។");
+        // ឆែកមើលថាមានប្រអប់ណាទំនេរអត់
+        if (username === "") {
+            alertMessage.innerText = "សូមមេត្តាបំពេញ «ឈ្មោះសិស្ស» របស់អ្នក!";
+            modal.classList.add('active');
             return false;
         }
-        if (!trackRadio) {
-            showAlert("សូមជ្រើសរើសថ្នាក់", "សូមជ្រើសរើសផ្នែកចំណេះដឹងរបស់អ្នក (វិទ្យាសាស្ត្រ ឬ សង្គម)។");
+        if (school === "") {
+            alertMessage.innerText = "សូមមេត្តាបំពេញឈ្មោះ «សាលារៀន/វិទ្យាល័យ»!";
+            modal.classList.add('active');
             return false;
         }
-        if (!school) {
-            showAlert("សូមបញ្ចូលឈ្មោះសាលា", "សូមបំពេញឈ្មោះសាលារៀន ឬវិទ្យាល័យដែលអ្នកកំពុងសិក្សា។");
-            return false;
-        }
-        if (!selectedProvince) {
-            showAlert("សូមជ្រើសរើសខេត្ត", "សូមចុចជ្រើសរើសរាជធានី ឬខេត្តដែលអ្នករស់នៅ។");
+        if (province === "") {
+            alertMessage.innerText = "សូមមេត្តាបំពេញ «ខេត្ត/ក្រុង» ដែលអ្នករស់នៅ!";
+            modal.classList.add('active');
             return false;
         }
 
-        // បើបំពេញគ្រប់ហើយ ផ្ញើទៅ Telegram
-        const track = trackRadio.value;
-        submitBtn.disabled = true;
-        submitBtn.innerText = "⌛ កំពុងភ្ជាប់ទៅប្រព័ន្ធ...";
+        // បើបំពេញគ្រប់ហើយ វានឹងរុញទៅកាន់ទំព័រ acc.html រួមជាមួយទិន្នន័យ
+        const classType = document.querySelector('input[name="class_type"]:checked').value;
+        window.location.href = `acc.html?username=${encodeURIComponent(username)}&school=${encodeURIComponent(school)}&province=${encodeURIComponent(province)}&class_type=${classType}`;
+    }
 
-        const textMessage = `📥 *មានបេក្ខជនចុះឈ្មោះប្រឡង* 📥\n\n` +
-                            `👤 ឈ្មោះ៖ *${name}*\n` +
-                            `📚 ថ្នាក់៖ *${track}*\n` +
-                            `🏫 សាលា៖ *${school}*\n` +
-                            `📍 ខេត្ត៖ *${selectedProvince}*`;
-
-        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                chat_id: CHAT_ID,
-                text: textMessage,
-                parse_mode: 'Markdown'
-            })
-        })
-        .then(res => {
-            sessionStorage.setItem('studentName', name);
-            sessionStorage.setItem('studentTrack', track);
-            sessionStorage.setItem('studentSchool', school);
-            sessionStorage.setItem('studentProvince', selectedProvince);
-            
-            window.location.href = 'acc.html';
-        })
-        .catch(err => {
-            showAlert("ការតភ្ជាប់បរាជ័យ", "អ៊ីនធឺណិតមានបញ្ហា! សូមព្យាយាមម្តងទៀត។");
-            submitBtn.disabled = false;
-            submitBtn.innerText = "ចាប់ផ្តើមធ្វើតេស្ត 🚀";
-        });
+    function closeModal() {
+        document.getElementById('alertModal').classList.remove('active');
     }
 </script>
 
 </body>
 </html>
+
