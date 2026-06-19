@@ -2,570 +2,329 @@
 <html lang="km">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ប្រព័ន្ធប្រឡងវិភាគប្រវត្តិវិទ្យា</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>កំពុងធ្វើតេស្តប្រវត្តិវិទ្យា</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Khmer&family=Moul&display=swap');
-
         :root {
-            --primary: #3498db;
-            --primary-dark: #2980b9;
-            --bg-app: #eff3f8;
-            --text-main: #2c3e50;
+            --bg-color: #e3edf7;
+            --text-color: #31344b;
+            --main-accent: #2ecc71;
+            --shadow-raised: 6px 6px 12px #b8c7d9, -6px -6px 12px #ffffff;
+            --shadow-pressed: inset 4px 4px 8px #b8c7d9, inset -4px -4px 8px #ffffff;
         }
 
-        body {
-            font-family: 'Khmer', sans-serif;
-            background-color: var(--bg-app);
-            margin: 0;
-            padding: 20px 15px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 90vh;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Kantumruy Pro', sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-color); min-height: 100vh; padding: 20px; display: flex; flex-direction: column; align-items: center; }
 
-        .quiz-card {
-            background: #ffffff;
-            border-radius: 24px;
-            box-shadow: 0 12px 35px rgba(149, 157, 165, 0.15);
+        .container { max-width: 650px; width: 100%; background: var(--bg-color); border-radius: 30px; box-shadow: var(--shadow-raised); padding: 25px; margin-bottom: 20px; }
+        
+        .profile-card { background: var(--bg-color); box-shadow: var(--shadow-pressed); padding: 15px 20px; border-radius: 20px; margin-bottom: 25px; font-size: 14px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .profile-card div span { font-weight: bold; color: #2c3e50; }
+
+        .timer-box { text-align: center; font-size: 16px; font-weight: bold; color: #e74c3c; margin-bottom: 15px; padding: 8px; background: var(--bg-color); box-shadow: var(--shadow-raised); border-radius: 10px; display: inline-block; width: 100%; }
+
+        h2 { font-size: 18px; text-align: center; margin-bottom: 20px; color: #2c3e50; }
+        
+        .quiz-card { background: var(--bg-color); box-shadow: var(--shadow-raised); padding: 20px; border-radius: 20px; margin-bottom: 25px; display: none; }
+        .quiz-card.active { display: block; }
+        .question-text { font-size: 16px; font-weight: 600; margin-bottom: 15px; color: #2c3e50; }
+        
+        .options-container { display: flex; flex-direction: column; gap: 12px; }
+        .option-label { display: flex; align-items: center; gap: 10px; padding: 12px 15px; background: var(--bg-color); box-shadow: var(--shadow-raised); border-radius: 12px; cursor: pointer; transition: 0.2s; font-size: 14px; }
+        .option-label:hover { background: rgba(52, 152, 219, 0.05); }
+        .option-label input { width: 18px; height: 18px; accent-color: #3498db; cursor: pointer; }
+
+        .navigation-btns { display: flex; justify-content: space-between; margin-top: 20px; }
+        .btn { padding: 12px 25px; border: none; border-radius: 12px; background: var(--bg-color); box-shadow: var(--shadow-raised); color: #2c3e50; font-weight: bold; cursor: pointer; transition: 0.2s; font-size: 14px; }
+        .btn:active { box-shadow: var(--shadow-pressed); }
+        .btn-submit { color: #fff; background: #2ecc71; box-shadow: 4px 4px 10px #b8c7d9; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
+
+        .result-box { text-align: center; display: none; padding: 30px 10px; }
+        .result-icon { font-size: 60px; color: #2ecc71; margin-bottom: 15px; }
+        .score-text { font-size: 24px; font-weight: bold; margin-bottom: 10px; }
+        .time-text { font-size: 16px; color: #e67e22; font-weight: 600; margin-bottom: 20px; }
+
+        .locked-box { text-align: center; padding: 40px 20px; display: none; }
+        .locked-icon { font-size: 70px; color: #e74c3c; margin-bottom: 20px; }
+
+        /* បដាបង្ហាញពាណិជ្ជកម្មខាងក្រោមគេបង្អស់ (Ads Banner) */
+        .ads-banner {
+            max-width: 650px;
             width: 100%;
-            max-width: 400px;
-            padding: 28px 24px;
-            box-sizing: border-box;
-            border: 1px solid rgba(255, 255, 255, 0.8);
-        }
-
-        .progress-container {
-            width: 100%;
-            background-color: #e2e8f0;
-            border-radius: 10px;
-            height: 7px;
-            margin-bottom: 22px;
-            overflow: hidden;
-        }
-
-        .progress-bar {
-            height: 100%;
-            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
-            width: 0%;
-            transition: width 0.4s ease;
-        }
-
-        .quiz-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 18px;
-            font-size: 13px;
-            font-weight: bold;
-            color: #7f8c8d;
-        }
-
-        /* ស្ទីលបង្ហាញនាឡិការាប់ថយក្រោយ */
-        .timer-display {
-            background-color: #fdf2f2;
-            color: #e74c3c;
-            padding: 4px 10px;
-            border-radius: 8px;
-            font-size: 14px;
-            border: 1px solid #f5c6cb;
-        }
-
-        .question-box {
-            background-color: #f8fafc;
-            padding: 16px;
-            border-left: 4px solid var(--primary);
-            border-radius: 12px;
-            margin-bottom: 20px;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
-        }
-
-        .question-text {
-            font-size: 15px;
-            font-weight: bold;
-            color: var(--text-main);
-            line-height: 1.7;
-            text-align: left;
-            margin: 0;
-        }
-
-        .answer-area {
-            width: 100%;
-            height: 150px;
-            padding: 16px;
-            border: 1px solid #d1d5db;
-            border-radius: 16px;
-            font-family: 'Khmer', sans-serif;
-            font-size: 14px;
-            box-sizing: border-box;
-            outline: none;
-            background-color: #f9fafb;
-            color: var(--text-main);
-            transition: all 0.3s ease;
-            margin-bottom: 10px;
-            resize: none;
-            line-height: 1.6;
-            box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
-        }
-
-        .answer-area:focus {
-            border-color: var(--primary);
-            background-color: #ffffff;
-            box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.15);
-        }
-
-        .footer-zone {
-            margin-top: 15px;
-            display: flex;
-            justify-content: flex-end;
-        }
-
-        .next-btn {
-            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
-            color: white;
-            border: none;
-            padding: 13px 32px;
-            border-radius: 14px;
-            font-family: 'Khmer', sans-serif;
-            font-size: 14px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.25);
-            transition: all 0.2s ease;
-        }
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(44, 62, 80, 0.5);
-            backdrop-filter: blur(5px);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 999;
-            opacity: 0;
-            pointer-events: none;
-            transition: all 0.3s ease;
-        }
-
-        .modal-overlay.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .alert-content {
-            background: white;
-            width: 88%;
-            max-width: 340px;
-            border-radius: 24px;
-            padding: 30px 22px;
+            background: #fff;
+            padding: 15px;
+            border-radius: 20px;
+            box-shadow: var(--shadow-raised);
             text-align: center;
-            box-sizing: border-box;
-            transform: translateY(20px);
-            transition: all 0.3s ease;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            margin-top: 10px;
+            margin-bottom: 60px;
+            border: 2px dashed #3498db;
         }
-
-        .modal-overlay.active .alert-content {
-            transform: translateY(0);
-        }
-
-        .welcome-title {
-            font-family: 'Moul', serif;
-            font-size: 15px;
-            color: #e74c3c;
-            margin-bottom: 15px;
-            line-height: 1.6;
-        }
-
-        .welcome-text {
-            font-size: 16px;
-            font-weight: bold;
-            color: #2c3e50;
-            background-color: #fdf2f2;
-            padding: 16px;
-            border-radius: 14px;
-            border: 1px dashed #f5c6cb;
-            margin-bottom: 25px;
-            line-height: 1.8;
-        }
-
-        .btn-start-quiz {
-            width: 100%;
-            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
-            color: white;
-            border: none;
-            padding: 14px;
-            border-radius: 12px;
-            font-family: 'Khmer', sans-serif;
-            font-size: 14px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
-        }
-
-        .alert-icon {
-            font-size: 46px;
-            margin-bottom: 12px;
+        .ads-banner h4 { font-size: 14px; color: #e74c3c; margin-bottom: 5px; }
+        .ads-banner p { font-size: 12px; color: #7f8c8d; margin-bottom: 10px; }
+        .ads-btn {
             display: inline-block;
-        }
-
-        .alert-title {
-            font-family: 'Moul', serif;
-            font-size: 14px;
-            color: #e67e22;
-            margin-bottom: 12px;
-        }
-
-        .alert-text {
-            font-size: 13px;
-            color: #64748b;
-            margin-bottom: 24px;
-            line-height: 1.6;
-        }
-
-        .alert-buttons {
-            display: flex;
-            gap: 12px;
-        }
-
-        .btn-cancel {
-            flex: 1;
-            background: #f1f5f9;
-            color: #475569;
-            border: none;
-            padding: 12px;
-            border-radius: 12px;
-            font-family: 'Khmer', sans-serif;
+            padding: 8px 20px;
+            background: #3498db;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 10px;
             font-size: 13px;
             font-weight: bold;
-            cursor: pointer;
+            transition: 0.2s;
         }
+        .ads-btn:hover { background: #2980b9; }
 
-        .btn-confirm {
-            flex: 1;
-            background: #e67e22;
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 12px;
-            font-family: 'Khmer', sans-serif;
-            font-size: 13px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .result-zone {
-            text-align: center;
-            display: none;
-        }
-
-        .result-icon {
-            font-size: 60px;
-            margin-bottom: 15px;
-        }
-
-        .result-title {
-            font-family: 'Moul', serif;
-            font-size: 16px;
-            color: var(--text-main);
-            margin-bottom: 15px;
-        }
-        .info-summary {
-            background-color: #f8fafc;
-            padding: 16px;
-            border-radius: 16px;
-            font-size: 13px;
-            color: #475569;
-            text-align: left;
-            line-height: 1.9;
-            margin-bottom: 20px;
-            border: 1px solid #edf2f7;
-        }
+        footer { position: fixed; bottom: 15px; font-size: 12px; opacity: 0.7; width: 100%; text-align: center; z-index: -1; }
     </style>
 </head>
 <body>
 
-<div class="modal-overlay" id="welcomeModal">
-    <div class="alert-content" style="max-width: 360px;">
-        <div class="alert-icon" style="font-size: 55px;">⚠️</div>
-        <div class="welcome-title">សូមអានការណែនាំមុនចាប់ផ្តើម</div>
-        <div class="welcome-text">
-            « ការប្រឡងបើចង់ចេះ<br>កុំប្រើ ប្រព័ន្ធបញ្ញាសិប្បនិម្មិត ឬ លួចមើលសៀវភៅ! »<br><br>
-            <span style="font-size: 13px; color: #e74c3c; font-weight: normal;">*មានពេលកំណត់តែ ៣០ នាទីប៉ុណ្ណោះ និងអាចប្រឡងបានតែម្តងគត់។</span>
-        </div>
-        <button class="btn-start-quiz" onclick="closeWelcomeModal()">ខ្ញុំយល់ព្រម និងចាប់ផ្តើមប្រឡង 🚀</button>
+<div class="container">
+    
+    <div id="lockedArea" class="locked-box">
+        <div class="locked-icon"><i class="fas fa-lock"></i></div>
+        <h2 style="color: #e74c3c; font-size: 22px; margin-bottom: 10px;">គណនីនេះត្រូវបានចាក់សោ!</h2>
+        <p style="color: #7f8c8d; font-size: 15px; margin-bottom: 25px;">អ្នកបានចូលរួមប្រឡងតេស្តនេះរួចរាល់ហើយ។ ប្រព័ន្ធអនុញ្ញាតឱ្យធ្វើតេស្តបានតែម្តងគត់!</p>
     </div>
-</div>
 
-<div class="modal-overlay" id="lockModal">
-    <div class="alert-content" style="max-width: 360px;">
-        <div class="alert-icon" style="font-size: 55px;">❌</div>
-        <div class="welcome-title" style="color: #e74c3c;">មិនអាចចូលប្រឡងបានទេ!</div>
-        <div class="welcome-text" style="background-color: #fdf2f2; border-color: #f5c6cb; color: #c0392b;">
-            អ្នកបានចូលប្រឡង ឬបញ្ជូនចម្លើយរួចរាល់ម្តងរួចមកហើយ។ ប្រព័ន្ធកំណត់ឱ្យប្រឡងបានតែម្តងគត់!
+    <div id="mainQuizContent">
+        <div class="profile-card" id="profileCard">
+            <div><i class="fas fa-user"></i> ឈ្មោះ៖ <span id="lblNames">-</span></div>
+            <div><i class="fas fa-school"></i> សាលា៖ <span id="lblSchool">-</span></div>
+            <div><i class="fas fa-map-marker-alt"></i> ខេត្ត៖ <span id="lblProvince">-</span></div>
+            <div><i class="fas fa-book"></i> ថ្នាក់៖ <span id="lblClass">-</span></div>
         </div>
-    </div>
-</div>
 
-<div class="quiz-card" id="mainQuizCard" style="display: none;">
-    <div id="quiz-box">
-        <div class="progress-container">
-            <div class="progress-bar" id="progress"></div>
+        <div class="timer-box" id="timerContainer">
+            <i class="fas fa-clock"></i> រយៈពេលកំពុងធ្វើតេស្ត៖ <span id="timerDisplay">00:00</span>
         </div>
-        <div class="quiz-header">
-            <span id="student-display">👤 សិស្ស៖ ...</span>
-            <span class="timer-display" id="timer">⏱️ ៣០:០០</span>
-        </div>
-        <div style="text-align: right; font-size: 12px; color: #7f8c8d; margin-bottom: 5px;" id="question-number">
-            សំណួរវិភាគទី ១/៥
-        </div>
-        
-        <div class="question-box">
-            <p class="question-text" id="question">កំពុងរៀបចំសំណួរវិភាគ...</p>
-        </div>
-        
-        <textarea id="studentAnswer" class="answer-area" placeholder="សរសេរការវិភាគរបស់អ្នកនៅទីនេះ... (ឬទុកទំនេរដើម្បីរំលង)"></textarea>
-        
-        <div class="footer-zone">
-            <button class="next-btn" id="nextBtn" onclick="handleNextClick()">បន្ទាប់ ➔</button>
+
+        <hr style="border:0; height:1px; background:#ccc; margin: 20px 0;">
+
+        <div id="quizArea">
+            <h2>សំណួរតេស្តប្រវត្តិវិទ្យា (<span id="currentNum">1</span>/10)</h2>
+            <div id="questionsContainer"></div>
+            
+            <div class="navigation-btns">
+                <button class="btn" id="btnPrev" onclick="changeQuestion(-1)" disabled>ថយក្រោយ</button>
+                <button class="btn" id="btnNext" onclick="changeQuestion(1)">បន្ទាប់</button>
+                <button class="btn btn-submit" id="btnSubmit" onclick="submitQuiz()" style="display:none;">ប្រគល់កិច្ចការ</button>
+            </div>
         </div>
     </div>
 
-    <div id="result-box" class="result-zone">
-        <div class="result-icon" id="endIcon">🎉</div>
-        <div class="result-title" id="endTitle">ផ្ញើចម្លើយជោគជ័យ!</div>
-        
-        <div class="info-summary">
-            <div id="res-name">👤 ឈ្មោះ៖ </div>
-            <div id="res-track">📚 ថ្នាក់៖ </div>
-            <div id="res-school">🏫 សាលា៖ </div>
-            <div id="res-province">📍 ខេត្ត៖ </div>
-        </div>
-        <p id="endStatusText" style="font-size: 13px; color: #27ae60; font-weight: bold; margin: 0;">📝 ចម្លើយវិភាគទាំង ៥ របស់អ្នក ត្រូវបានបញ្ជូនទៅលោកគ្រូរួចរាល់ហើយ!</p>
+    <div id="resultArea" class="result-box">
+        <div class="result-icon"><i class="fas fa-check-circle"></i></div>
+        <div class="score-text">អ្នកទទួលបានពិន្ទុ៖ <span id="finalScore">0</span> / 10</div>
+        <div class="time-text" id="finalTimeText">រយៈពេលប្រើប្រាស់៖ 00 នាទី 00 វិនាទី</div>
+        <p style="color:#7f8c8d; font-size:14px;">ព័ត៌មាន លទ្ធផលរបស់អ្នកត្រូវបានបញ្ជូនទៅគ្រុប Telegram រួចរាល់!</p>
     </div>
 </div>
 
-<div class="modal-overlay" id="skipAlertModal">
-    <div class="alert-content">
-        <div class="alert-icon">🔔</div>
-        <div class="alert-title">មិនទាន់បានឆ្លើយទេ!</div>
-        <div class="alert-text">ប្រអប់ចម្លើយកំពុងទំនេរ។ តើអ្នកពិតជាចង់រំលងសំណួរវិភាគមួយនេះមែនទេ?</div>
-        <div class="alert-buttons">
-            <button class="btn-cancel" onclick="closeSkipAlert()">ត្រឡប់ទៅឆ្លើយ</button>
-            <button class="btn-confirm" onclick="confirmSkip()">យល់ព្រមរំលង</button>
-        </div>
-    </div>
+<div class="ads-banner">
+    <h4><i class="fas fa-ad"></i> ពាណិជ្ជកម្មឧបត្ថម្ភ</h4>
+    <p>សូមគាំទ្រហាងទំនិញអនឡាញរបស់យើងខ្ញុំ ដើម្បីទទួលបានប្រូម៉ូសិនពិសេសៗជាច្រើន!</p>
+    <a href="https://authgo.pro/select-store" target="_blank" class="ads-btn">ចូលទៅកាន់ហាងទំនិញ</a>
 </div>
+
+<footer>
+    <p>រក្សាសិទ្ធិដោយ ខ្លឹមសារ</p>
+</footer>
 
 <script>
-    const BOT_TOKEN = '8690967267:AAHXIaOLWQZlXYfZNi6_jd80oYkcZN81oY8';
-    const CHAT_ID = '-1003919234156';
-
-    // ពិនិត្យមើលថាតើសិស្សធ្លាប់ប្រឡងហើយឬនៅ
-    if (localStorage.getItem('quiz_completed') === 'true') {
-        document.getElementById('lockModal').classList.add('active');
-    } else {
-        document.getElementById('welcomeModal').classList.add('active');
-        document.getElementById('mainQuizCard').style.display = 'block';
-    }
-
-    const studentName = sessionStorage.getItem('studentName') || "មិនស្គាល់ឈ្មោះ";
-    const studentTrack = sessionStorage.getItem('studentTrack') || "មិនច្បាស់";
-    const studentSchool = sessionStorage.getItem('studentSchool') || "មិនច្បាស់";
-    const studentProvince = sessionStorage.getItem('studentProvince') || "មិនច្បាស់";
-
-    document.getElementById('student-display').innerText = `👤 ${studentName}`;
-
-    const khmerNumbers = ["០", "១", "២", "៣", "៤", "៥", "៦", "៧", "៨", "៩"];
-    function toKhmerNumber(num) {
-        return num.toString().split('').map(x => khmerNumbers[parseInt(x)] || x).join('');
-    }
-
-    function formatKhmerTime(seconds) {
-        let mins = Math.floor(seconds / 60);
-        let secs = seconds % 60;
-        let minsStr = mins < 10 ? "០" + toKhmerNumber(mins) : toKhmerNumber(mins);
-        let secsStr = secs < 10 ? "០" + toKhmerNumber(secs) : toKhmerNumber(secs);
-        return minsStr + ":" + secsStr;
-    }
-
-    const masterQuizBank = [
-
-  "ចូរវិភាគពីផលវិបាកនៃការកែទម្រង់រដ្ឋបាល និងប្រព័ន្ធពន្ធដាររបស់បារាំងនៅចុងសតវត្សរ៍ទីដប់ប្រាំបួន តើវាបានផ្លាស់ប្តូរទម្រង់សង្គមខ្មែរបែបណា?",
-  "តើការងើបឡើងបះបោររបស់ប្រជាពលរដ្ឋខ្មែរដឹកនាំដោយព្រះអង្គម្ចាស់ ស៊ីវត្ថា បង្ហាញពីការប្រឆាំងនឹងឥទ្ធិពលបរទេស និងការការពាររាជបល្ល័ង្កយ៉ាងដូចម្តេច?",
-  "ចូរពន្យល់ពីសារៈសំខាន់នៃព្រឹត្តិការណ៍បាតុកម្មឆ្នាំងខ្ទះឆ្នាំមួយពាន់ប្រាំរយសែសិបពីរ តើព្រឹត្តិការណ៍នេះជះឥទ្ធិពលអ្វីខ្លះដល់ការភ្ញាក់រលឹកផ្នែកនយោបាយរបស់បញ្ញវន្តខ្មែរ?",
-  "ហេតុអ្វីបានជាការបង្កើតសាលាបាលីជាន់ខ្ពស់ និងកាសែតនគរវត្ត ត្រូវបានគេចាត់ទុកជាគ្រឹះដ៏សំខាន់ក្នុងការដាស់ស្មារតីជាតិនិយមខ្មែរ?",
-  "តើការចូលមកគ្រប់គ្រងរបស់កងទ័ពជប៉ុននៅកម្ពុជាកំឡុងសង្គ្រាមលោកលើកទីពីរ បានផ្តល់ឱកាស និងផលវិបាកអ្វីខ្លះដល់ដំណើរការទាមទារឯករាជ្យរបស់ខ្មែរ?",
-  "ចូរវាយតម្លៃលើលទ្ធផលនៃសន្និសីទទីក្រុងហ្សឺណែវឆ្នាំមួយពាន់ប្រាំរយហាសិបបួន តើសន្និសីទនេះបានផ្តល់ភាពស្របច្បាប់ពេញលេញដល់ឯករាជ្យភាពរបស់កម្ពុជាកម្រិតណា?",
-  "តើការដាក់រាជ្យរបស់ព្រះបាទនរោត្តម សីហនុ នៅឆ្នាំមួយពាន់ប្រាំរយហាសិបប្រាំ ដើម្បីបង្កើតចលនាសង្គមរាស្ត្រនិយម មានគោលបំណងនយោបាយស៊ីជម្រៅបែបណា?",
-  "ចូរវិភាគពីផលប៉ះពាល់នៃការកាត់ផ្តាច់ជំនួយសេដ្ឋកិច្ចនិងយោធាពីសហរដ្ឋអាមេរិកនៅឆ្នាំមួយពាន់ប្រាំរយហុកសិបបី មកលើស្ថិរភាពផ្ទៃក្នុងនៃរបបសង្គមរាស្ត្រនិយម?",
-  "ហេតុអ្វីបានជាព្រឹត្តិការណ៍បះបោររបស់ប្រជាកសិករនៅស្រុកសំឡូតឆ្នាំមួយពាន់ប្រាំរយហុកសិបប្រាំinit ត្រូវបានគេមើលឃើញថាជាចំណុចចាប់ផ្តើមនៃភាពប្រេះឆាដ៏ធ្ងន់ធ្ងរក្នុងសង្គមខ្មែរ?",
-  "តើវត្តមានកងទ័ពវៀតកុង និងវៀតណាមខាងជើងនៅលើទឹកដីខ្មែរនៅចុងទសវត្សរ៍ឆ្នាំមួយពាន់ប្រាំរយហុកសិប បានរំលោភលើនយោបាយអព្យាក្រឹតភាព និងបង្កជាលេសដល់បរទេសយ៉ាងដូចម្តេច?",
-  "ចូរពិភាក្សាពីឥទ្ធិពលនៃការទម្លាក់គ្រាប់បែកយ៉ាងធ្ងន់ធ្ងររបស់សហរដ្ឋអាមេរិកមកលើការផ្លាស់ប្តូរចិត្តសាស្ត្ររបស់ប្រជាជនជនបទក្នុងការគាំទ្រចលនាតស៊ូព្រៃម៉ាកគី។",
-  "តើការអំពាវនាវរបស់សម្តេចនរោត្តម សីហនុ ពីទីក្រុងប៉េកាំងឱ្យប្រជាពលរដ្ឋចូលព្រៃតស៊ូ មានទម្ងន់នយោបាយកម្រិតណាដល់ការរីកសាយភាយឥទ្ធិពលរបស់ពួកខ្មែរក្រហម?",
-  "ហេតុអ្វីបានជារដ្ឋាភិបាលសាធារណរដ្ឋខ្មែររបស់លោក លន់ ណុល មិនអាចគ្រប់គ្រងស្ថានការណ៍សង្គ្រាម និងដោះស្រាយបញ្ហាពុករលួយក្នុងជួរកងទ័ពបាន?",
-  "ចូរវិភាគពីមូលហេតុដែលពួកខ្មែរក្រហមប្រកាសលុបបំបាត់ចរន្តរូបិយប័ណ្ណ និងផ្សារសេរី តើវាបានបំផ្លាញរចនាសម្ព័ន្ធសេដ្ឋកិច្ចជាតិកម្រិតណា?",
-  "តើការបង្កើតប្រព័ន្ធសហករណ៍និងការហូបរួមក្នុងសម័យអាវខ្មៅ បានជះឥទ្ធិពលអវិជ្ជមានអ្វីខ្លះដល់관계គ្រួសារ និងសិទ្ធិជាមូលដ្ឋានរបស់មនុស្សជាតិ?",
-  "ចូរពន្យល់ពីមូលហេតុនៃការធ្វើស្វ័យសម្អាតផ្ទៃក្នុងរបស់បក្សពួក ប៉ុល ពត តើវាឆ្លុះបញ្ចាំងពីវិបត្តិមនោគមវិជ្ជា និងការភ័យខ្លាចបាត់បង់អំណាចបែបណា?",
-  "តើការបង្កើតរណសិរ្សសាមគ្គីសង្គ្រោះជាតិកម្ពុជា ក្នុងឆ្នាំមួយពាន់ប្រាំរយចិតសិបប្រាំបី មានតួនាទីជាប្រវត្តិសាស្ត្របែបណាខ្លះក្នុងការរំដោះប្រទេសពីរបបប្រល័យពូជសាសន៍?",
-  "ចូរវិភាគពីផលវិបាកនៃការអនុវត្តផែនការកាប្រាំទៅលើកម្លាំងពលកម្មរបស់ប្រជាជន និងស្ថានភាពសុខាភិបាលក្នុងទសវត្សរ៍ឆ្នាំមួយពាន់ប្រាំរយប៉ែតសិប។",
-  "ហេតុអ្វីបានជាការចរចារវាងសម្តេចនរោត្តម សីហនុ និងលោក ហ៊ុន សែន នៅហ្វ៊ែរអង់តាដឺណ្វៀ ត្រូវបានគេចាត់ទុកជាចំណុចចាប់ផ្តើមនៃការបើកផ្លូវស្វែងរកសន្តិភាពពិតប្រាកដ?",
-  "តើការផ្លាស់ប្តូរប្រព័ន្ធសេដ្ឋកិច្ចពីផែនការមកជាសេដ្ឋកិច្ចទីផ្សារសេរី និងការអនុញ្ញាតឱ្យមានកម្មសិទ្ធិឯកជនលើដីធ្លីនៅចុងទសវត្សរ៍ឆ្នាំមួយពាន់ប្រាំរយប៉ែតសិប បានស្តារជីវភាពពលរដ្ឋឡើងវិញបែបណា?",
-  "ចូរវាយតម្លៃលើបញ្ហាប្រឈមធំៗរបស់អង្គការសហប្រជាជាតិក្នុងការរំសាយអាវុធរបស់ភាគីខ្មែរក្រហម ដែលមិនព្រមចូលរួមក្នុងដំណើរការបោះឆ្នោតឆ្នាំមួយពាន់ប្រាំរយកៅសិបបី។",
-  "តើការសម្រេចចិត្តបង្កើតរដ្ឋាភិបាលចម្រុះដែលមាននាយករដ្ឋមន្ត្រីពីររូប ឆ្លុះបញ្ចាំងពីការសម្រុះសម្រួលនយោបាយដើម្បីជៀសវាងសង្គ្រាមស៊ីវិលសារជាថ្មីបែបណា?",
-  "ចូរពន្យល់ពីឥទ្ធិពលនៃការអនុវត្តនយោបាយឈ្នះ-ឈ្នះ តើកត្តាអ្វីខ្លះដែលធ្វើឱ្យនយោបាយនេះអាចរំលាយអង្គការចាត់តាំងខ្មែរក្រហមបានទាំងស្រុងនៅឆ្នាំមួយពាន់ប្រាំរយកៅសិបប្រាំបួន?",
-  "ចូរវិភាគពីសារៈសំខាន់នៃការបញ្ចូលប្រទេសកម្ពុជាជាសមាជិកអាស៊ាននៅឆ្នាំមួយពាន់ប្រាំរយកៅសិបប្រាំបួន តើវាផ្តល់ផលចំណេញផ្នែកការទូត និងសេដ្ឋកិច្ចអ្វីខ្លះដល់កម្ពុជា?",
-  "តើដំណើរការសវនាការនៃតុលាការវិសាមញ្ញក្នុងតុលាការកម្ពុជា មានតម្លៃជាប្រវត្តិសាស្ត្របែបណាខ្លះក្នុងការស្វែងរកយុត្តិធម៌ និងការផ្សះផ្សាផ្លូវចិត្តជនរងគ្រោះ?",
-  "ចូរពិភាក្សាពីកត្តាដែលធ្វើឱ្យវិស័យកាត់ដេរ សំណង់ និងទេសចរណ៍ ក្លាយជាសសរស្តម្ភសេដ្ឋកិច្ចដ៏រឹងមាំរបស់កម្ពុជាចាប់តាំងពីដើមសតវត្សរ៍ទីម្ភៃមួយមក។
-",
-  "តើការអភិវឌ្ឍផ្នែកហេដ្ឋារចនាសម្ព័ន្ធរូបវន្តក្នុងរយៈពេលពីរទសវត្សរ៍ចុងក្រោយនេះ បានកាត់បន្ថយគម្លាតសេដ្ឋកិច្ចរវាងទីក្រុងនិងជនបទយ៉ាងដូចម្តេច?",
-  "ហេតុអ្វីបានជាការថែរក្សាសន្តិភាពទោះក្នុងតម្លៃណាក៏ដោយ ត្រូវបានចាត់ទុកជាអាទិភាពកំពូល និងជាគ្រឹះមិនអាចខ្វះបានសម្រាប់លទ្ធិប្រជាធិបតេយ្យ និងការអភិវឌ្ឍនៅកម្ពុជា?",
-  "ចូរវាយតម្លៃលើតួនាទីរបស់យុវជនកម្ពុជានៅក្នុងយុគសម័យឌីជីថល តើការរីកចម្រើនផ្នែកបច្ចេកវិទ្យាព័ត៌មានជួយជម្រុញការយល់ដឹងផ្នែកប្រវត្តិសាស្ត្របែបណា?",
-  "ចូរវិភាគពីយុទ្ធសាស្ត្រការទូតពហុភាគីរបស់កម្ពុជាក្នុងបរិបទបច្ចុប្បន្ន តើកម្ពុជាត្រូវធ្វើតុល្យភាពទំនាក់ទំនងជាមួយមហាអំណាចធំៗយ៉ាងដូចម្តេចដើម្បីការពារអធិបតេយ្យភាពជាតិ?"
+    // ធនាគារសំណួរ ៣០
+    const allQuestions = [
+        { q: "តើប្រទេសបារាំងបានដាក់អាណានិគមលើកម្ពុជានៅឆ្នាំណា?", o: ["១៨៦៣", "១៩៥៣", "១៩៧០", "១៨៨៤"], a: 0 },
+        { q: "តើព្រះមហាក្សត្រខ្មព្រះអង្គណាដែលឡាយព្រះហស្ថលេខាលើសន្ធិសញ្ញាអាណានិគមបារាំង?", o: ["ព្រះបាទនរោត្ដម", "ព្រះបាទស៊ីសុវត្ថិ", "ព្រះបាទជ័យវរ្ម័នទី៧", "ព្រះបាទនរោត្ដមសីហនុ"], a: 0 },
+        { q: "តើកម្ពុជាបានទទួលឯករាជ្យពេញលេញពីបារាំងនៅថ្ងៃខែឆ្នាំណា?", o: ["៩ វិច្ឆិកា ១៩៥៣", "៧ មករា ១៩៧៩", "២៣ តុលា ១៩៩១", "១៧ មេសា ១៩៧៥"], a: 0 },
+        { q: "តើព្រះមហាក្សត្រខ្មែរព្រះអង្គណាជាព្រះបិតាឯករាជ្យជាតិ?", o: ["ព្រះបាទនរោត្ដម សីហមុនី", "ព្រះបាទនរោត្ដម សីហនុ", "ព្រះបាទសុរាម្រិត", "ព្រះបាទមុនីវង្ស"], a: 1 },
+        { q: "តើរដ្ឋប្រហារទម្លាក់ព្រះបាទនរោត្ដមសីហនុ កើតឡើងនៅថ្ងៃទីខែឆ្នាំណា?", o: ["១៨ មីនា ១៩៧០", "១៧ មេសា ១៩៧៥", "៧ មករា ១៩៧៩", "២៣ តុលា ១៩៩១"], a: 0 },
+        { q: "តើនរណាជាប្រធានាធិបតីនៃរបបសាធារណរដ្ឋខ្មែរ (១៩៧០-១៩៧៥)?", o: ["ស៊ិន ស៊ីសាមុត", "លន់ ណុល", "ស៊ុន សាន", "អៀង សារី"], a: 1 },
+        { q: "តើរបបកម្ពុជាប្រជាធិបតេយ្យ (ប៉ុល ពត) បានគ្រប់គ្រងប្រទេសនៅចន្លោះឆ្នាំណា?", o: ["១៩៧០-១៩៧៥", "១៩៧៥-១៩៧៩", "១៩៧៩-១៩៩៣", "១៩៩៣-បច្ចុប្បន្ន"], a: 1 },
+        { q: "តើថ្ងៃជ័យជម្នះ ៧ មករា ១៩៧៩ ជាថ្ងៃអ្វី?", o: ["ថ្ងៃរំដោះប្រទេសពីរបបប្រល័យពូជសាសន៍ ប៉ុល ពត", "ថ្ងៃចុះសន្ធិសញ្ញាសន្តិភាព", "ថ្ងៃបុណ្យឯករាជ្យជាតិ", "ថ្ងៃប្រកាសរដ្ឋធម្មនុញ្ញ"], a: 0 },
+        { q: "តើកិច្ចព្រមព្រៀងសន្តិភាពទីក្រុងប៉ារីសត្រូវបានចុះហត្ថលេខានៅថ្ងៃណា?", o: ["២៣ តុលា ១៩៩១", "៧ មករា ១៩៧៩", "៩ វិច្ឆិកា ១៩៥៣", "២៩ ធ្នូ ១៩៩៨"], a: 0 },
+        { q: "តើការបោះឆ្នោតសកលលើកដំបូងរៀបចំដោយ UNTAC កើតឡើងនៅឆ្នាំណា?", o: ["១៩៩៣", "១៩៩៨", "២០០៣", "១៩៨៩"], a: 0 },
+        { q: "តើនយោបាយឈ្នះ-ឈ្នះទទួលបានជោគជ័យទាំងស្រុងរំលាយអង្គការចាត់តាំងខ្មែរក្រហមនៅឆ្នាំណា?", o: ["១៩៩៣", "១៩៩៥", "១៩៩៨", "២០០០"], a: 2 },
+        { q: "តើប្រាសាទព្រះវិហារត្រូវបានចុះក្នុងបញ្ជីបេតិកភណ្ឌពិភពលោកនៅឆ្នាំណា?", o: ["២០០៨", "២០១៥", "២០០៤", "២០១៧"], a: 0 },
+        { q: "តើបារាំងត្រួតត្រាកម្ពុជាអស់រយៈពេលប៉ុន្មានឆ្នាំ?", o: ["៩០ ឆ្នាំ", "៨០ ឆ្នាំ", "一百 ឆ្នាំ", "៥០ ឆ្នាំ"], a: 0 },
+        { q: "ចលនាតស៊ូប្រឆាំងបារាំងដំបូងគេដឹកនាំដោយអ្នកណា?", o: ["ឧកញ៉ាក្រឡាហោមគង់", "អាចារ្យស្វា", "ពោធិកំបោរ", "ត្រូវទាំងអស់"], a: 3 },
+        { q: "សង្គ្រាមលោកលើកទី២ បារាំងបានផ្ទេរសិទ្ធិគ្រប់គ្រងកម្ពុជាបណ្តោះអាសន្នទៅឱ្យប្រទេសណា?", o: ["ជប៉ុន", "ថៃ", "អាមេរិក", "វៀតណាម"], a: 0 },
+        { q: "តើរបបសង្គមរាស្ត្រនិយមបង្កើតឡើងនៅឆ្នាំណា?", o: ["១៩៥៥", "១៩៥៣", "១៩៦០", "១៩៧០"], a: 0 },
+        { q: "តើវិមានឯករាជ្យត្រូវបានកសាងឡើងនៅឆ្នាំណា?", o: ["១៩៥៨", "១៩៥៣", "១៩៦២", "១៩៧០"], a: 0 },
+        { q: "តើប្រទេសណាដែលគាំទ្ររបបសាធារណរដ្ឋខ្មែររបស់លោក លន់ ណុល?", o: ["សហរដ្ឋអាមេរិក", "ចិន", "សហភាពសូវៀត", "បារាំង"], a: 0 },
+        { q: "តើភ្នំពេញត្រូវបានវាយបែកដោយកងទ័ពខ្មែរក្រហមនៅថ្ងៃខែឆ្នាំណា?", o: ["១៧ មេសា ១៩៧៥", "៧ មករា ១៩៧៩", "១៨ មីនា ១៩៧០", "៩ វិច្ឆិកា ១៩៥៣"], a: 0 },
+        { q: "តើនរណាជាមេដឹកនាំកំពូលនៃរបបអាវខ្មៅខ្មែរក្រហម?", o: ["ប៉ុល ពត", "ខៀវ សំផន", "នួន ជា", "អៀង សារី"], a: 0 },
+        { q: "តើរបបកម្ពុជាប្រជាធិបតេយ្យប្តូរឈ្មោះភ្នំពេញទៅជាអ្វី?", o: ["មហានគរ", "រក្សាឈ្មោះដដែល", "ក្រុងវីរៈជន", "តំបន់រំដោះ"], a: 1 },
+        { q: "ក្រោយឆ្នាំ ១៩៧៩ តើប្រទេសកម្ពុជាមានឈ្មោះផ្លូវការថាអ្វី?", o: ["សាធារណរដ្ឋប្រជាមានិតកម្ពុជា", "រដ្ឋកម្ពុជា", "ព្រះរាជាណាចក្រកម្ពុជា", "សាធារណរដ្ឋខ្មែរ"], a: 0 },
+        { q: "តើស្ថាប័នអន្តរជាតិណាដែលមកជួយរៀបចំការបោះឆ្នោតឆ្នាំ ១៩៩៣?", o: ["UNTAC", "UNESCO", "UNICEF", "WHO"], a: 0 },
+        { q: "តើព្រះមហាក្សត្របច្ចុប្បន្ននៃព្រះរាជាណាចក្រកម្ពុជាគឺព្រះអង្គណា?", o: ["ព្រះបាទនរោត្ដម សីហមុនី", "ព្រះបាទនរោត្ដម សីហនុ", "ព្រះបាទជ័យវរ្ម័នទី៧", "ព្រះអង្គឌួង"], a: 0 },
+        { q: "តើរដ្ឋធម្មនុញ្ញចុងក្រោយបង្អស់របស់កម្ពុជាត្រូវបានប្រកាសឱ្យប្រើនៅឆ្នាំណា?", o: ["១៩៩៣", "១៩៧៥", "១៩៨១", "១៩៩៨"], a: 0 },
+        { q: "តើកម្ពុជាបានចូលជាសមាជិកអាស៊ាន (ASEAN) នៅឆ្នាំណា?", o: ["១៩៩៩", "១៩៩៥", "១៩៩៧", "២០០២"], a: 0 },
+        { q: "តើល្ខោនខោលត្រូវបានដាក់បញ្ចូលជាបេតិកភណ្ឌអរូបីនៃមនុស្សជាតិនៅឆ្នាំណា?", o: ["២០១៨", "២០១៥", "២០១៦", "២០២០"], a: 0 },
+        { q: "តើស្ពានអ្នកលឿងត្រូវបានសម្ពោធដាក់ឱ្យប្រើប្រាស់នៅឆ្នាំណា?", o: ["២០១៥", "២០1២", "២០១៨", "២០២០"], a: 0 },
+        { q: "តើកម្ពុជាធ្វើជាម្ចាស់ផ្ទះនៃព្រឹត្តិការណ៍កីឡាស៊ីហ្គេមលើកដំបូងនៅឆ្នាំណា?", o: ["២០២៣", "២០២០", "២០២២", "២០២៥"], a: 0 },
+        { q: "តើនាយករដ្ឋមន្ត្រីបច្ចុប្បន្ននៃព្រះរាជាណាចក្រកម្ពុជាគឺនរណា?", o: ["សម្តេចធិបតី ហ៊ុន ម៉ាណែត", "សម្តេចតេជោ ហ៊ុន សែន", "សម្តេច ស ខេង", "សម្តេច ទៀ បាញ់"], a: 0 }
     ];
 
     let selectedQuestions = [];
-    let currentQuestion = 0;
-    let studentResponses = [];
-    let totalTime = 1800; // ៣០ នាទី គិតជាវិនាទី
-    let timerInterval;
+    let currentIdx = 0;
+    let userAnswers = new Array(10).fill(null);
+    let totalSeconds = 0;
+    let timerInterval = null;
 
-    function shuffleAndSelectQuestions() {
-        let shuffled = [...masterQuizBank].sort(() => 0.5 - Math.random());
-        selectedQuestions = shuffled.slice(0, 5);
+    const params = new URLSearchParams(window.location.search);
+    const uName = params.get('username') || 'មិនស្គាល់ឈ្មោះ';
+    const uSchool = params.get('school') || 'មិនស្គាល់សាលា';
+    const uProvince = params.get('province') || 'មិនស្គាល់ខេត្ត';
+    const uClass = params.get('class_type') === 'science' ? 'វិទ្យាសាស្ត្រ' : 'ថ្នាក់សង្គម';
+
+    document.getElementById('lblNames').innerText = uName;
+    document.getElementById('lblSchool').innerText = uSchool;
+    document.getElementById('lblProvince').innerText = uProvince;
+    document.getElementById('lblClass').innerText = uClass;
+
+    function checkExamStatus() {
+        if (localStorage.getItem("history_exam_completed") === "true") {
+            document.getElementById('mainQuizContent').style.display = 'none';
+            document.getElementById('lockedArea').style.display = 'block';
+        } else {
+            initQuiz();
+        }
     }
 
-    function closeWelcomeModal() {
-        document.getElementById('welcomeModal').classList.remove('active');
+    function initQuiz() {
+        const shuffled = [...allQuestions].sort(() => 0.5 - Math.random());
+        selectedQuestions = shuffled.slice(0, 10);
+        renderQuestions();
         startTimer();
-        loadQuestion();
     }
 
-    // មុខងារនាឡិការាប់ថយក្រោយ
     function startTimer() {
-        timerInterval = setInterval(function() {
-            totalTime--;
-            document.getElementById('timer').innerText = `⏱️ ${formatKhmerTime(totalTime)}`;
-            
-            if (totalTime <= 0) {
-                clearInterval(timerInterval);
-                handleTimeOut(); // អស់ពេល បិទប្រព័ន្ធស្វ័យប្រវត្ត
-            }
+        timerInterval = setInterval(() => {
+            totalSeconds++;
+            let mins = Math.floor(totalSeconds / 60);
+            let secs = totalSeconds % 60;
+            mins = mins < 10 ? '0' + mins : mins;
+            secs = secs < 10 ? '0' + secs : secs;
+            document.getElementById('timerDisplay').innerText = `${mins}:${secs}`;
         }, 1000);
     }
 
-    function loadQuestion() {
-        document.getElementById('studentAnswer').value = "";
-        document.getElementById('studentAnswer').focus();
+    function renderQuestions() {
+        const container = document.getElementById('questionsContainer');
+        container.innerHTML = '';
 
-        const progressPercent = (currentQuestion / 5) * 100;
-        document.getElementById('progress').style.width = progressPercent + "%";
-        
-        document.getElementById('question-number').innerText = `សំណួរវិភាគទី ${toKhmerNumber(currentQuestion + 1)}/៥`;
-        document.getElementById('question').innerText = selectedQuestions[currentQuestion];
-        
-        if (currentQuestion === 4) {
-            document.getElementById('nextBtn').innerText = "បញ្ជូនកិច្ចការ 🏁";
-        }
-    }
+        selectedQuestions.forEach((qData, qIdx) => {
+            const card = document.createElement('div');
+            card.className = `quiz-card ${qIdx === 0 ? 'active' : ''}`;
+            card.id = `qCard_${qIdx}`;
 
-    function handleNextClick() {
-        const answerInput = document.getElementById('studentAnswer').value.trim();
-        
-        if (answerInput === "") {
-            document.getElementById('skipAlertModal').classList.add('active');
-        } else {
-            saveAndGoNext(answerInput);
-        }
-    }
+            const qText = document.createElement('div');
+            qText.className = 'question-text';
+            qText.innerText = `សំណួរទី ${qIdx + 1}: ${qData.q}`;
+            card.appendChild(qText);
 
-    function closeSkipAlert() {
-        document.getElementById('skipAlertModal').classList.remove('active');
-        document.getElementById('studentAnswer').focus();
-    }
+            const optionsDiv = document.createElement('div');
+            optionsDiv.className = 'options-container';
 
-    function confirmSkip() {
-        document.getElementById('skipAlertModal').classList.remove('active');
-        saveAndGoNext("រំលង (មិនបានឆ្លើយ)");
-    }
+            qData.o.forEach((opt, oIdx) => {
+                const label = document.createElement('label');
+                label.className = 'option-label';
+                
+                const radio = document.createElement('input');
+                radio.type = 'radio';
+                radio.name = `ans_${qIdx}`;
+                radio.value = oIdx;
+                radio.onclick = () => saveAnswer(qIdx, oIdx);
 
-    function saveAndGoNext(answerText) {
-        studentResponses.push({
-            question: selectedQuestions[currentQuestion],
-            answer: answerText
-        });
-
-        currentQuestion++;
-        if (currentQuestion < 5) {
-            loadQuestion();
-        } else {
-            clearInterval(timerInterval);
-            sendAnswersToTelegram('ធម្មតា');
-        }
-    }
-
-    // ករណីអស់ពេល ៣០ នាទី
-    function handleTimeOut() {
-        // បំពេញចម្លើយដែលសល់ដោយពាក្យអស់ពេល
-        while (studentResponses.length < 5) {
-            studentResponses.push({
-                question: selectedQuestions[studentResponses.length] || "សំណួរមិនទាន់ដល់",
-                answer: "រំលង (អស់ពេលធ្វើតេស្ត ៣០ នាទី)"
+                label.appendChild(radio);
+                label.append(` ${opt}`);
+                optionsDiv.appendChild(label);
             });
-        }
-        sendAnswersToTelegram('អស់ពេល');
+
+            card.appendChild(optionsDiv);
+            container.appendChild(card);
+        });
     }
 
-    function sendAnswersToTelegram(status) {
-        // ចាក់សោរឧបករណ៍សិស្សភ្លាមៗ ការពារមិនឱ្យលួចធ្វើម្តងទៀត
-        localStorage.setItem('quiz_completed', 'true');
+    function saveAnswer(qIdx, oIdx) {
+        userAnswers[qIdx] = oIdx;
+    }
 
-        document.getElementById('quiz-box').style.display = "none";
-        document.getElementById('result-box').style.display = "block";
-        document.getElementById('progress').style.width = "100%";
+    function changeQuestion(dir) {
+        document.getElementById(`qCard_${currentIdx}`).classList.remove('active');
+        currentIdx += dir;
+        document.getElementById(`qCard_${currentIdx}`).classList.add('active');
 
-        document.getElementById('res-name').innerText = `👤 ឈ្មោះ៖ ${studentName}`;
-        document.getElementById('res-track').innerText = `📚 ថ្នាក់៖ ${studentTrack}`;
-        document.getElementById('res-school').innerText = `🏫 សាលា៖ ${studentSchool}`;
-        document.getElementById('res-province').innerText = `📍 ខេត្ត៖ ${studentProvince}`;
+        document.getElementById('currentNum').innerText = currentIdx + 1;
+        document.getElementById('btnPrev').disabled = currentIdx === 0;
 
-        if (status === 'អស់ពេល') {
-            document.getElementById('endIcon').innerText = "⏳";
-            document.getElementById('endTitle').innerText = "អស់ពេលប្រឡង!";
-            document.getElementById('endTitle').style.color = "#e74c3c";
-            document.getElementById('endStatusText').innerText = "⚠️ អ្នកបានប្រើប្រាស់អស់ពេល ៣០ នាទីហើយ។ ប្រព័ន្ធបានប្រមូលចម្លើយស្វ័យប្រវត្តទៅលោកគ្រូ!";
-            document.getElementById('endStatusText').style.color = "#e74c3c";
+        if (currentIdx === 9) {
+            document.getElementById('btnNext').style.display = 'none';
+            document.getElementById('btnSubmit').style.display = 'block';
+        } else {
+            document.getElementById('btnNext').style.display = 'block';
+            document.getElementById('btnSubmit').style.display = 'none';
         }
+    }
 
-        let telegramMessage = `📝 *សន្លឹកកិច្ចការវិភាគស៊ីជម្រៅ (៥ សំណួរចៃដន្យ)* 📝\n` +
-                              `⏱️ ស្ថានភាព៖ *${status === 'អស់ពេល' ? '🛑 អស់ពេល ៣០ នាទី' : '✅ ធ្វើទាន់ពេល'}*\n\n` +
-                              `👤 ឈ្មោះ៖ *${studentName}*\n` +
-                              `📚 ថ្នាក់៖ *${studentTrack}*\n` +
-                              `🏫 សាលា៖ *${studentSchool}*\n` +
-                              `📍 ខេត្ត៖ *${studentProvince}*\n\n` +
-                              `📋 *ចម្លើយបកស្រាយរបស់សិស្ស៖*\n`;
+    function submitQuiz() {
+        clearInterval(timerInterval);
+        localStorage.setItem("history_exam_completed", "true");
 
-        studentResponses.forEach((item, index) => {
-            telegramMessage += `\n❓ *សំណួរទី ${toKhmerNumber(index + 1)}៖* _${item.question}_\n✍️ *ការវិភាគ៖* ${item.answer}\n`;
+        let score = 0;
+        selectedQuestions.forEach((qData, idx) => {
+            if (userAnswers[idx] === qData.a) {
+                score++;
+            }
         });
 
-        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+        let finalMins = Math.floor(totalSeconds / 60);
+        let finalSecs = totalSeconds % 60;
+        let timeString = `${finalMins} នាទី ${finalSecs} វិនាទី`;
+
+        document.getElementById('mainQuizContent').style.display = 'none';
+        document.getElementById('finalScore').innerText = score;
+        document.getElementById('finalTimeText').innerText = `រយៈពេលប្រើប្រាស់៖ ${timeString}`;
+        document.getElementById('resultArea').style.display = 'block';
+
+        sendToTelegram(score, timeString);
+    }
+
+    function sendToTelegram(score, timeSpent) {
+        const botToken = "8690967267:AAHXIaOLWQZlXYfZNi6_jd80oYkcZN81oY8";
+        const groupId = "-1003919234156";
+        
+        const message = `🔔 <b>របាយការណ៍លទ្ធផលប្រឡងប្រវត្តិវិទ្យា</b> 🔔\n\n` +
+                        `👤 <b>ឈ្មោះសិស្ស:</b> ${uName}\n` +
+                        `🏫 <b>មកពីសាលា:</b> ${uSchool}\n` +
+                        `📍 <b>ខេត្ត/ក្រុង:</b> ${uProvince}\n` +
+                        `📚 <b>ផ្នែក/ថ្នាក់:</b> ${uClass}\n` +
+                        `---------------------------\n` +
+                        `📊 <b>ពិន្ទុទទួលបាន:</b> 🎯 <b>${score} / 10</b> 🎯\n` +
+                        `⏱️ <b>រយៈពេលធ្វើតេស្ត:</b> <code>${timeSpent}</code>`;
+
+        const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
+        
+        fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                chat_id: CHAT_ID,
-                text: telegramMessage,
-                parse_mode: 'Markdown'
+                chat_id: groupId,
+                text: message,
+                parse_mode: 'HTML'
             })
-        }).catch(err => console.error(err));
+        }).catch(error => console.error('Error:', error));
     }
 
-    shuffleAndSelectQuestions();
+    window.onload = checkExamStatus;
 </script>
 
 </body>
 </html>
+
